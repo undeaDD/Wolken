@@ -1,0 +1,173 @@
+package Wolke;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.plugin.java.JavaPlugin;
+
+
+/**
+ * @author DieFriiks / CustomCraftDev
+ * @category Wolkenlaufen
+ * @version 1.0
+ */
+public class Wolke extends JavaPlugin {
+	
+	
+	// variables used in the other classes
+  protected FileConfiguration config;
+  protected boolean debug;
+	protected ArrayList<Player> playerliste;
+    
+    
+	/**
+   * on Plugin enable
+   * public methode
+   */
+	public void onEnable() {
+		
+		loadConfig();
+    	if(debug){
+    		say("Config loaded");
+    	}
+    	playerliste = new ArrayList<Player>();
+		new EventListener(this);
+    	if(debug){
+    		say("Listener registered");
+    	}
+	}
+
+	
+	/**
+   * on Plugin disable
+   * public methode
+   */
+	public void onDisable() {
+		try {
+			saveConfig();
+		} catch (Exception e) {
+        	if(debug){
+        		e.printStackTrace();
+        	}
+		}
+		say("disabled");
+	}
+
+	
+	/**
+   * on Command
+   * @param sender - command sender
+   * @param cmd - command
+   * @param label
+   * @return true or false
+   * public methode 
+   */
+	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+		if ((sender instanceof Player)) {
+			Player p = (Player)sender;
+			if (cmd.getName().equalsIgnoreCase("wolke") && args.length == 1) {
+
+				// disable
+				if (args[0].equalsIgnoreCase("disable") && p.hasPermission("Wolkenläufer.disable")) {
+					this.setEnabled(false);
+					say("Disable was executed, by " + p.getName());
+					return true;
+				}
+				
+				// reload
+				if (args[0].equalsIgnoreCase("reload") && p.hasPermission("Wolkenläufer.reload")) {
+					reload();
+					say("Reload was executed, by " + p.getName());
+					return true;
+				}
+				
+				// give item
+				if (args[0].equalsIgnoreCase("give") && p.hasPermission("Wolkenläufer.give")) {
+					ItemStack item = new ItemStack(Material.INK_SACK, 1);
+						item.setDurability((short) 12);
+						ItemMeta m = item.getItemMeta();
+						m.setDisplayName(ChatColor.RED + "Wolken");
+						List<String> lore = new ArrayList<String>();
+							lore.add(ChatColor.GRAY + "Rightclick to toggle Mode");
+							lore.add(ChatColor.GRAY + "Needs Permission: wolkenläufer.use");
+						m.setLore(lore);
+						item.setItemMeta(m);
+						item.addUnsafeEnchantment(Enchantment.PROTECTION_FALL, 10);
+					p.getInventory().addItem(item);
+					return true;
+				}
+			}
+		}
+		
+		// commands from console
+		else{
+			say("Command ingame only ...");
+			return true;
+		}
+		
+		// nothing to do here \o/
+		return false;
+	}
+	
+	
+	/**
+     * load config settings
+     * private methode
+     */
+	private void loadConfig() {
+		config = getConfig();
+		config.options().copyDefaults(true);
+
+		debug = config.getBoolean("config.debug");
+		
+		saveConfig();
+	}
+   
+    
+    /**
+     * reload
+     * private methode
+     */
+    private void reload(){
+ 	   	try {
+ 	   		
+ 	   		// Remove unused variables and objects
+			    config = null;
+
+			// Run java garbage collector to delete unused things
+			System.gc();
+			
+			// Reset PlayerListe
+		    playerliste.removeAll(playerliste);
+		    
+			// load everything again
+			loadConfig();
+			
+			say("reload successfull");
+ 	   	} catch (Exception e) {
+        	if(debug){
+        		e.printStackTrace();
+        	}
+        }
+    }
+    
+    
+    /**
+     * print to console
+     * @param message to print
+     * private methode
+     */
+	public void say(String out) {
+		if(debug){
+			System.out.println("[RegionInv] " + out);
+		}
+	}
+}
