@@ -1,0 +1,149 @@
+package Wolke;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerToggleFlightEvent;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+
+
+/**
+ * made by DieFriiks / CustomCraftDev
+ * Wolkenläufer
+ */
+public class EventListener implements Listener {
+	
+	
+    // private variables only for this class
+	public Wolke plugin;
+	
+	
+	/**
+     * Constructor
+     * @param Plugin plugin
+     * public methode
+     */
+	public EventListener(Wolke plugin) {
+		this.plugin = plugin;
+		plugin.getServer().getPluginManager().registerEvents(this, plugin);
+	}
+	
+	
+	/**
+     * PlayerMoveEvent
+     * @param PlayerMoveEvent e
+     * public methode
+     */
+	@EventHandler
+	public void onItemRightclick(PlayerInteractEvent e) {
+		Player p = e.getPlayer();
+		if(p.hasPermission("Wolkenläufer.use")){
+			if(p.getItemInHand().getType().equals(Material.INK_SACK) && p.getItemInHand().getDurability() == 12 && p.getItemInHand().getEnchantmentLevel(Enchantment.PROTECTION_FALL) == 10){
+				if(e.getAction().equals(Action.RIGHT_CLICK_AIR) || e.getAction().equals(Action.RIGHT_CLICK_BLOCK)){
+					if(plugin.playerliste.contains(p)){
+						plugin.playerliste.remove(p);
+						p.removePotionEffect(PotionEffectType.JUMP);
+						Location loc = p.getLocation().add(0, -1, 0);
+						
+						loc.getBlock().setType(Material.AIR);
+						loc.add(1, 0, 0).getBlock().setType(Material.AIR);
+						loc.add(0, 0, 1).getBlock().setType(Material.AIR);
+						loc.add(-1, 0, 0).getBlock().setType(Material.AIR);
+						loc.add(-1, 0, 0).getBlock().setType(Material.AIR);
+						loc.add(0, 0, -1).getBlock().setType(Material.AIR);
+						loc.add(0, 0, -1).getBlock().setType(Material.AIR);
+						loc.add(1, 0, 0).getBlock().setType(Material.AIR);
+						loc.add(1, 0, 0).getBlock().setType(Material.AIR);
+						
+						loc.add(1, 0, 0).getBlock().setType(Material.AIR);
+						loc.add(0, 0, 1).getBlock().setType(Material.AIR);
+						loc.add(0, 0, 1).getBlock().setType(Material.AIR);
+						loc.add(0, 0, 1).getBlock().setType(Material.AIR);
+						loc.add(-1, 0, 0).getBlock().setType(Material.AIR);
+						loc.add(-1, 0, 0).getBlock().setType(Material.AIR);
+						loc.add(-1, 0, 0).getBlock().setType(Material.AIR);
+						loc.add(-1, 0, 0).getBlock().setType(Material.AIR);
+						loc.add(0, 0, -1).getBlock().setType(Material.AIR);
+						loc.add(0, 0, -1).getBlock().setType(Material.AIR);
+						loc.add(0, 0, -1).getBlock().setType(Material.AIR);
+						loc.add(0, 0, -1).getBlock().setType(Material.AIR);
+						loc.add(1, 0, 0).getBlock().setType(Material.AIR);
+						loc.add(1, 0, 0).getBlock().setType(Material.AIR);
+						loc.add(1, 0, 0).getBlock().setType(Material.AIR);
+						loc.add(1, 0, 0).getBlock().setType(Material.AIR);
+						
+						p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 60, 999));
+					}
+					else{
+						p.setFlying(false);
+						plugin.playerliste.add(p);
+						p.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 999999, -5));
+						p.teleport(p.getLocation().add(0, 20, 0));
+					}
+				}
+			}
+		}
+	}
+	
+	
+	/**
+     * PlayerMoveEvent
+     * @param PlayerMoveEvent e
+     * public methode
+     */
+	@EventHandler
+	public void onPlayerMove(PlayerMoveEvent e) {
+		Player p = e.getPlayer();
+		if(plugin.playerliste.contains(p)){			
+			Location loc = p.getLocation().add(0, -1, 0);
+		
+			loc.getBlock().setType(Material.ICE);
+			loc.add(1, 0, 0).getBlock().setType(Material.ICE);
+			loc.add(0, 0, 1).getBlock().setType(Material.ICE);
+			loc.add(-1, 0, 0).getBlock().setType(Material.ICE);
+			loc.add(-1, 0, 0).getBlock().setType(Material.ICE);
+			loc.add(0, 0, -1).getBlock().setType(Material.ICE);
+			loc.add(0, 0, -1).getBlock().setType(Material.ICE);
+			loc.add(1, 0, 0).getBlock().setType(Material.ICE);
+			loc.add(1, 0, 0).getBlock().setType(Material.ICE);
+			
+			loc.add(1, 0, 0).getBlock().setType(Material.AIR);
+			loc.add(0, 0, 1).getBlock().setType(Material.AIR);
+			loc.add(0, 0, 1).getBlock().setType(Material.AIR);
+			loc.add(0, 0, 1).getBlock().setType(Material.AIR);
+			loc.add(-1, 0, 0).getBlock().setType(Material.AIR);
+			loc.add(-1, 0, 0).getBlock().setType(Material.AIR);
+			loc.add(-1, 0, 0).getBlock().setType(Material.AIR);
+			loc.add(-1, 0, 0).getBlock().setType(Material.AIR);
+			loc.add(0, 0, -1).getBlock().setType(Material.AIR);
+			loc.add(0, 0, -1).getBlock().setType(Material.AIR);
+			loc.add(0, 0, -1).getBlock().setType(Material.AIR);
+			loc.add(0, 0, -1).getBlock().setType(Material.AIR);
+			loc.add(1, 0, 0).getBlock().setType(Material.AIR);
+			loc.add(1, 0, 0).getBlock().setType(Material.AIR);
+			loc.add(1, 0, 0).getBlock().setType(Material.AIR);
+			loc.add(1, 0, 0).getBlock().setType(Material.AIR);
+		}
+	}
+	
+	
+	/**
+     * Flight Change Event
+     * @param PlayerMoveEvent e
+     * public methode
+     */
+	@EventHandler
+	public void onPlayerFlight(PlayerToggleFlightEvent e) {
+		Player p = e.getPlayer();
+		if(plugin.playerliste.contains(p)){			
+			e.setCancelled(true);
+		}
+	}
+	
+}
